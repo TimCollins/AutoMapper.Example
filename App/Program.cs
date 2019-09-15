@@ -13,8 +13,35 @@ namespace App
             BetterWay();
             FlatteningExample();
             ReverseMappingExample();
+            ProjectionExample();
 
             Utils.WaitForEscape();
+        }
+
+        private static void ProjectionExample()
+        {
+            // Create a model
+            var year = DateTime.Now.Year;
+            var calendarEvent = new CalendarEvent
+            {
+                Date = new DateTime(year, 12, 24, 20, 30, 0),
+                Title = "Christmas Eve Party"
+            };
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+                cfg.CreateMap<CalendarEvent, CalendarEventForm>()
+                    .ForMember(dest => dest.EventDate, opt => opt.MapFrom(src => src.Date.Date))
+                    .ForMember(dest => dest.EventHour, opt => opt.MapFrom(src => src.Date.Hour))
+                    .ForMember(dest => dest.EventMinute, opt => opt.MapFrom(src => src.Date.Minute))
+            );
+            var mapper = config.CreateMapper();
+
+            // Perform the mapping
+            var form = mapper.Map<CalendarEvent, CalendarEventForm>(calendarEvent);
+
+            Console.WriteLine("Projection Example:");
+            Console.WriteLine($"Title: {form.Title}, Date: {form.EventDate.ToShortDateString()}, Time: {form.EventHour}:{form.EventMinute}");
         }
 
         private static void ReverseMappingExample()
