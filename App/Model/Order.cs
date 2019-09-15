@@ -6,6 +6,8 @@ namespace App.Model
     public class Order
     {
         public Customer Customer { get; set; }
+        public decimal Total { get; internal set; }
+
         private IList<OrderLineItem> _orderLineItems = new List<OrderLineItem>();
 
         public void AddLineItem(Product product, int quantity)

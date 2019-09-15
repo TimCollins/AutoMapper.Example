@@ -12,7 +12,45 @@ namespace App
             BoringWay();
             BetterWay();
             FlatteningExample();
+            ReverseMappingExample();
+
             Utils.WaitForEscape();
+        }
+
+        private static void ReverseMappingExample()
+        {
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Order, OrderDTO>()
+                    .ReverseMap();
+            });
+
+            var mapper = config.CreateMapper();
+
+            // Define models
+            var customer = new Customer
+            {
+                Name = "Homer Simpson"
+            };
+
+            var order = new Order
+            {
+                Customer = customer,
+                Total = 15.8M
+            };
+
+            // Perform the mapping
+            // The standard model to DTO mapping is available
+            var orderDto = mapper.Map<Order, OrderDTO>(order);
+
+            // The ReverseMap() call enables a DTO to be mapped BACK to 
+            // an Order
+            orderDto.CustomerName = "Barney Gumble";
+            mapper.Map(orderDto, order);
+
+            Console.WriteLine("Reverse Mapping Example:");
+            Console.WriteLine($"Name: {orderDto.CustomerName}, Total: €{orderDto.Total}");
         }
 
         private static void FlatteningExample()
