@@ -11,7 +11,43 @@ namespace App
         {
             BoringWay();
             BetterWay();
+            FlatteningExample();
             Utils.WaitForEscape();
+        }
+
+        private static void FlatteningExample()
+        {
+            // Define a complex model
+            var customer = new Customer
+            {
+                Name = "Homer Simpson"
+            };
+
+            var order = new Order
+            {
+                Customer = customer
+            };
+
+            var box = new Product
+            {
+                Name = "Box",
+                Price = 4.99M
+            };
+
+            order.AddLineItem(box, 15);
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Order, OrderDTO>());
+            var mapper = config.CreateMapper();
+
+            // Perform the mapping
+            // The complex Order object containing Customer, Product and OrderLineItem instances is simplified
+            // to a DTO containing just Name and Total
+            var dto = mapper.Map<Order, OrderDTO>(order);
+
+            // Here an assertion as to the content could be done but this will just output the data
+            Console.WriteLine("Flattening Example:");
+            Console.WriteLine($"Name: {dto.CustomerName}, Total: €{dto.Total}");
         }
 
         private static void BoringWay()
